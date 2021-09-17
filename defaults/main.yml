@@ -1,2 +1,27 @@
 ---
-# defaults file for common
+
+omicron_application_name: 'omicron'
+
+# installation parameters
+omicron_application_dir: '/opt/{{ omicron_application_name }}'
+omicron_groupname: '{{ omicron_username }}'
+omicron_username: '{{ omicron_application_name }}'
+omicron_virtualenv_name: 'venv'
+
+# database credentials
+omicron_db_host: 'localhost'
+omicron_db_name: '{{ omicron_username }}'
+omicron_db_user: '{{ omicron_username }}'
+omicron_db_pass: 'changeme'
+
+# application configuration
+omicron_allowed_hosts:
+  - 'localhost'
+omicron_debug: 'False'
+omicron_secret_key: 'changeme'
+omicron_session_cookie_age: '60 * 60 * 4' # four days
+
+# Application administrative user
+omicron_superuser_email: 'user@example.com'
+omicron_superuser_name: '{{ omicron_application_name }}'
+omicron_superuser_password: 'changeme'

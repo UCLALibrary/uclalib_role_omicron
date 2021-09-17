@@ -1,1 +1,135 @@
 ---
+
+
+- name: Install Initial Packages
+  package:
+    name: '{{ hostvars["omicron_packages_" . ansible_distribution_major_version }}'
+    state: present
+  become: true
+
+- name: Create dedicated app group
+  group:
+    name: '{{ omicron_groupname }}'
+    state: present
+  become: true
+
+- name: Create dedicted app user
+  user:
+    name: '{{ omicron_username }}'
+    group: '{{ omicron_groupname }}'
+    groups: 'nginx'
+    comment: '{{ omicron_application_name | title() }}'
+    state: present
+  become: true
+
+- name: Create application directory
+  file:
+    name: '{{ omicron_application_dir }}'
+    state: directory
+    owner: '{{ omicron_username }}'
+    group: '{{ omicron_groupname }}'
+    mode: '0755'
+  become: true
+
+- name: Clone Omicron respository
+  git:
+    dest: '{{ omicron_application_dir }}'
+    repo: 'https://{{ git_access_token }}@github.com/UCLALibrary/omicron.git'
+    version: 'main'
+  become: true
+  become_user: '{{ omicron_username }}'
+  when: git
+
+- name: Create Python Virtualenv
+  pip:
+    virtualenv: '{{ omicron_virtualenv_name }}'
+    chdir: '{{ omicron_application_dir }}'
+    requirements: 'omicron/omicron/requirements.txt'
+    virtualenv_command: 'virtualenv-3'
+  become: true
+  become_user: '{{ omicron_username }}'
+
+- name: Install settings.py
+  template:
+    dest: '{{ omicron_application_dir }}/omicron/omicron/omicron/{{ item }}'
+    src: '{{ item }}.j2'
+    owner: '{{ omicron_username }}'
+    group: '{{ omicron_groupname }}'
+    mode: '0400'
+  become: true
+  become_user: '{{ omicron_username }}'
+  loop:
+    - settings.py
+
+- name: Migrate database
+  command:
+    cmd: python ./manage.py migrate
+    chdir: '{{ omicron_application_dir }}/omicron/omicron'
+      # don't need to specify chdir if full path to manage.py is used
+  environment:
+    PATH: '{{ omicron_application_dir }}/omicron-venv/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
+  become: true
+  become_user: omicron
+  register: db_migrate
+  changed_when: '"No migrations to apply." not in db_migrate.stdout'
+
+- name: Create application useruser
+  command:
+    cmd: >
+      python ./manage.py createsuperuser
+        --noinput
+        --username '{{ omicron_superuser_name }}'
+        --email '{{ omicron_superuser_email }}'
+    chdir: '{{ omicron_application_dir }}/omicron/omicron'
+      # don't need to specify chdir if full path to manage.py is used
+  environment:
+    PATH: '{{ omicron_application_dir }}/{{ omicron_virtualenv_name }}/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
+    DJANGO_SUPERUSER_PASSWORD: '{{ omicron_superuser_password }}'
+  become: true
+  become_user: omicron
+  register: superuser_create
+  failed_when:
+    - superuser_create.rc != 0
+    - '"That username is already taken." not in superuser_create.stderr'
+  changed_when: '"Superuser created successfully." in superuser_create.stdout'
+
+- name: Create log directory
+  file:
+    path: '/var/log/{{ omicron_application_name }}'
+    state: directory
+    owner: '{{ omicron_username }}'
+    group: '{{ omicron_groupname }}'
+    mode: '0755'
+  become: true
+
+- name: Configure nginx for Omicron
+  template:
+    dest: '/etc/nginx/{{ item.dest }}'
+    src: '{{ item.src }}'
+    mode: '0444'
+  become: true
+  loop:
+    - { src: 'nginx_socket.conf.j2',
+        dest: 'conf.d/{{ omicron_application_name }}_socket.conf' }
+    - { src: 'nginx_application.conf,j2',
+        dest: 'default.d/{{ omicron_application_name }}.conf' }
+
+- name: Create Omicron Daphne systemd service
+  template:
+    dest: '/etc/systemd/system/{{ item.dest }}'
+    src: '{{ item.src }}'
+    mode: '0444'
+  become: true
+  loop:
+    - { src: 'systemd_service.j2',
+        dest: '{{ omicron_application_name }}' }
+
+- name: Enable and start Omicron services
+  service:
+    name: '{{ item }}'
+    enabled: true
+    state: started
+  become: true
+  loop:
+    - '{{ omicron_application_name }}'
+    - 'nginx'

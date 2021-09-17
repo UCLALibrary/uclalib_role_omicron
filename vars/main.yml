@@ -1,2 +1,8 @@
 ---
-# vars file for common
+
+omicron_packages_7:
+  - nginx
+  - python-setuptools # for pip module to make the virtualenv
+  - python3
+  - python3-pip
+  - python36-virtualenv

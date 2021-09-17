@@ -1,0 +1,12 @@
+[Unit]
+Description=Omicron Daphne server.
+
+[Service]
+User=omicron
+WorkingDirectory={{ application_dir | default('/opt/omicron') }}/omicron/omicron
+RuntimeDirectory=omicron
+#LogsDirectory=omicron
+ExecStart=/bin/bash -c 'source /opt/omicron/omicron-venv/bin/activate && daphne -u /var/run/omicron/omicron.sock --proxy-headers --access-log /var/log/omicron/access.log omicron.asgi:application'
+
+[Install]
+WantedBy=multi-user.target
