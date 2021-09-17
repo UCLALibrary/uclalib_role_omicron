@@ -3,8 +3,10 @@
 dependencies: []
 
 galaxy_info:
-  author: your name
-  description:
+  role_name: uclalib_role_omicron
+  namespace: uclalibrary
+  author: John H. Robinson, IV <jhriv@ucla.edu>
+  description: Omicron Asset Tracker
   company: UCLA Library
   license: reference LICENSE file
   min_ansible_version: 2.4
