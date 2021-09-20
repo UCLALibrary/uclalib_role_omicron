@@ -122,7 +122,7 @@
   become: true
   loop:
     - { src: 'systemd_service.j2',
-        dest: '{{ omicron_application_name }}' }
+        dest: '{{ omicron_application_name }}.service' }
 
 - name: Enable and start Omicron services
   service:
