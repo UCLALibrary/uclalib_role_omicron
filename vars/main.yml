@@ -1,6 +1,7 @@
 ---
 
 omicron_packages:
+  - git
   - nginx
   - python-setuptools # for pip module to make the virtualenv
   - python3
