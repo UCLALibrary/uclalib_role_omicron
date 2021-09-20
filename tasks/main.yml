@@ -3,7 +3,7 @@
 
 - name: Install Initial Packages
   package:
-    name: '{{ hostvars["omicron_packages_" . ansible_distribution_major_version }}'
+    name: '{{ omicron_packages }}'
     state: present
   become: true
 
