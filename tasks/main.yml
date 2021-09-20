@@ -66,7 +66,7 @@
     chdir: '{{ omicron_application_dir }}/{{ omicron_application_name }}/omicron'
       # don't need to specify chdir if full path to manage.py is used
   environment:
-    PATH: '{{ omicron_application_dir }}/omicron-venv/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
+    PATH: '{{ omicron_application_dir }}/{{ omicron_virtualenv_name }}/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
   become: true
   become_user: omicron
   register: db_migrate
