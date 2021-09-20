@@ -1,13 +1,13 @@
 location /static/ {
-        alias /opt/omicron/omicron/omicron/omicron/static/;
+        alias {{ omicron_application_dir }}/{{ omicron_application_name }}/omicron/omicron/static/;
 }
 
 location / {
-        try_files $uri @omicron_proxy;
+        try_files $uri @{{ omicron_application_name }}_proxy;
 }
 
-location @omicron_proxy {
-        proxy_pass http://omicron_app_socket;
+location @{{ omicron_application_name }}_proxy {
+        proxy_pass http://{{ omicron_application_name }}_app_socket;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";

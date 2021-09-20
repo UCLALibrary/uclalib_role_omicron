@@ -2,11 +2,11 @@
 Description=Omicron Daphne server.
 
 [Service]
-User=omicron
-WorkingDirectory={{ application_dir | default('/opt/omicron') }}/omicron/omicron
-RuntimeDirectory=omicron
+User={{ omicron_username }}
+WorkingDirectory={{ omicron_application_dir }}/{{ omicron_application_name }}/omicron
+RuntimeDirectory={{ omicron_application_name }}
 #LogsDirectory=omicron
-ExecStart=/bin/bash -c 'source /opt/omicron/omicron-venv/bin/activate && daphne -u /var/run/omicron/omicron.sock --proxy-headers --access-log /var/log/omicron/access.log omicron.asgi:application'
+ExecStart=/bin/bash -c 'source {{ omicron_application_dir }}/{{ omicron_virtualenv_name }}/bin/activate && daphne -u /var/run/{{ omicron_application_name }}/{{ omicron_application_name }}.sock --proxy-headers --access-log /var/log/{{ omicron_application_name }}/access.log omicron.asgi:application'
 
 [Install]
 WantedBy=multi-user.target
