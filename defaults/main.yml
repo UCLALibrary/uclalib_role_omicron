@@ -6,6 +6,7 @@ omicron_application_name: 'omicron'
 omicron_application_dir: '/opt/{{ omicron_application_name }}'
 omicron_groupname: '{{ omicron_username }}'
 omicron_username: '{{ omicron_application_name }}'
+omicron_version: 'main'
 omicron_virtualenv_name: 'venv'
 
 # database credentials

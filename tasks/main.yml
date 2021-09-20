@@ -35,7 +35,7 @@
   git:
     dest: '{{ omicron_application_dir }}'
     repo: 'https://{{ git_access_token }}@github.com/UCLALibrary/omicron.git'
-    version: 'main'
+    version: '{{ omicron_version }}'
   become: true
   become_user: '{{ omicron_username }}'
 
