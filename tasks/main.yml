@@ -33,7 +33,7 @@
 
 - name: Clone Omicron respository
   git:
-    dest: '{{ omicron_application_dir }}'
+    dest: '{{ omicron_application_dir }}/{{ omicron_application_name }}'
     repo: 'https://{{ git_access_token }}@github.com/UCLALibrary/omicron.git'
     version: '{{ omicron_version }}'
   become: true
