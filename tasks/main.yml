@@ -68,7 +68,7 @@
   environment:
     PATH: '{{ omicron_application_dir }}/{{ omicron_virtualenv_name }}/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
   become: true
-  become_user: omicron
+  become_user: '{{ omicron_username }}'
   register: db_migrate
   changed_when: '"No migrations to apply." not in db_migrate.stdout'
 
@@ -85,7 +85,7 @@
     PATH: '{{ omicron_application_dir }}/{{ omicron_virtualenv_name }}/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
     DJANGO_SUPERUSER_PASSWORD: '{{ omicron_superuser_password }}'
   become: true
-  become_user: omicron
+  become_user: '{{ omicron_username }}'
   register: superuser_create
   failed_when:
     - superuser_create.rc != 0
