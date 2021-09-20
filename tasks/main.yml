@@ -107,6 +107,7 @@
     src: '{{ item.src }}'
     mode: '0444'
   become: true
+  notify: Reload Nginx
   loop:
     - { src: 'nginx_socket.conf.j2',
         dest: 'conf.d/{{ omicron_application_name }}_socket.conf' }

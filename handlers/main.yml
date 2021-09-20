@@ -1,2 +1,7 @@
 ---
-# handlers file for common
+
+- name: Reload Nginx
+  systemd:
+    name: nginx
+    state: reloaded
+  become: true
