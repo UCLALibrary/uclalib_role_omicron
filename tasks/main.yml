@@ -110,7 +110,7 @@
   loop:
     - { src: 'nginx_socket.conf.j2',
         dest: 'conf.d/{{ omicron_application_name }}_socket.conf' }
-    - { src: 'nginx_application.conf,j2',
+    - { src: 'nginx_application.conf.j2',
         dest: 'default.d/{{ omicron_application_name }}.conf' }
 
 - name: Create Omicron Daphne systemd service
