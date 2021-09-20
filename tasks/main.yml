@@ -43,14 +43,14 @@
   pip:
     virtualenv: '{{ omicron_virtualenv_name }}'
     chdir: '{{ omicron_application_dir }}'
-    requirements: 'omicron/omicron/requirements.txt'
+    requirements: '{{ omicron_application_name }}/omicron/requirements.txt'
     virtualenv_command: 'virtualenv-3'
   become: true
   become_user: '{{ omicron_username }}'
 
 - name: Install settings.py
   template:
-    dest: '{{ omicron_application_dir }}/omicron/omicron/omicron/{{ item }}'
+    dest: '{{ omicron_application_dir }}/{{ omicron_application_name }}/omicron/omicron/{{ item }}'
     src: '{{ item }}.j2'
     owner: '{{ omicron_username }}'
     group: '{{ omicron_groupname }}'
@@ -63,7 +63,7 @@
 - name: Migrate database
   command:
     cmd: python ./manage.py migrate
-    chdir: '{{ omicron_application_dir }}/omicron/omicron'
+    chdir: '{{ omicron_application_dir }}/{{ omicron_application_name }}/omicron'
       # don't need to specify chdir if full path to manage.py is used
   environment:
     PATH: '{{ omicron_application_dir }}/omicron-venv/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
@@ -79,7 +79,7 @@
         --noinput
         --username '{{ omicron_superuser_name }}'
         --email '{{ omicron_superuser_email }}'
-    chdir: '{{ omicron_application_dir }}/omicron/omicron'
+    chdir: '{{ omicron_application_dir }}/{{ omicron_application_name }}/omicron'
       # don't need to specify chdir if full path to manage.py is used
   environment:
     PATH: '{{ omicron_application_dir }}/{{ omicron_virtualenv_name }}/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
