@@ -5,3 +5,9 @@
     name: nginx
     state: reloaded
   become: true
+
+- name: Restart Omicron
+  systemd:
+    name: '{{ omicron_application_name }}'
+    state: restarted
+  become: true

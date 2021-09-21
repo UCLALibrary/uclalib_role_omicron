@@ -57,6 +57,7 @@
     mode: '0400'
   become: true
   become_user: '{{ omicron_username }}'
+  notify: Restart Omicron
   loop:
     - settings.py
 
