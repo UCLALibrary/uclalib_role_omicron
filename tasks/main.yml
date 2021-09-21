@@ -117,6 +117,14 @@
     - { src: 'nginx_application.conf.j2',
         dest: 'default.d/{{ omicron_application_name }}.conf' }
 
+- name: Remove IPv6 listen directive
+  lineinfile:
+    path: '/etc/nginx/nginx.conf'
+    regexp: '^\s*listen\s+\[::\].*$'
+    state: absent
+  become: true
+  notify: Reload Nginx
+
 - name: Create Omicron Daphne systemd service
   template:
     dest: '/etc/systemd/system/{{ item.dest }}'
