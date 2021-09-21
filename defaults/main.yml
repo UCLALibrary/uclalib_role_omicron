@@ -9,6 +9,10 @@ omicron_username: '{{ omicron_application_name }}'
 omicron_version: 'main'
 omicron_virtualenv_name: 'venv'
 
+# SSL certificate location
+omicron_ssl_certificate: '/etc/pki/tls/certs/localhost.crt'
+omicron_ssl_certificate_key: '/etc/pki/tls/private/localhost.key'
+
 # database credentials
 omicron_db_host: 'localhost'
 omicron_db_name: '{{ omicron_username }}'
