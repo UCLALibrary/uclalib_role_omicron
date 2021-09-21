@@ -26,7 +26,7 @@ SECRET_KEY = '{{ omicron_secret_key }}'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = '{{ omicron_debug | bool }}'
 
-ALLOWED_HOSTS = [ '164.67.40.142', 'p-u-omicron02.library.ucla.edu', 'localhost' ]
+ALLOWED_HOSTS = {{ omicron_allowed_hosts }}
 
 
 LOGGING = {
