@@ -6,65 +6,73 @@ Omicron Initial Installation / Configuration / Maintenance
 Requirements
 ------------
 
-SELinux must be disabled. Firewall must be set to allow 80/443 access. A postgres database server must be available.
+Server requirements:
+- SELinux must be disabled
+- Firewall must be set to allow 80/443 access
+
+External requirements:
+- A postgres database server must be available, either external or on localhost
+- Github access token (`git_access_token`)
+
+Since the application repository is private, a Github account with read permissions is required. Credentials are passed as an access token in the `git_access_token` role variable.
 
 Role Variables
 --------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
 ### Defaults
 
 * `omicron_application_name`: (string)
   * (default) omicron
 * `omicron_application_dir`: (string/pathname)
-	* (default) /opt/omicron
-	* based on `omicron_application_name`  
+  * (default) /opt/omicron
+  * based on `omicron_application_name`
 * `omicron_groupname`: (string)
-	* (default) omicron
-	* based on `omicron_username`
+  * (default) omicron
+  * based on `omicron_username`
 * `omicron_username`: (string)
-	* (default) omicron
-	* based on `omicron_application_name`
-* `omicron_version`: (string)
-	* (default) main
+  * (default) omicron
+  * based on `omicron_application_name`
+* `omicron_version`: (string) Git tag/branch/commit to deploy
+  * (default) main
 * `omicron_virtualenv_name`: (string/pathname)
-	* (default) venv
-	* relative to `omicron_application_dir`
+  * (default) venv
+  * relative to `omicron_application_dir`
 * `omicron_ssl_certificate`: (string/pathname)
-	* (default) /etc/pki/tls/certs/localhost.crt
+  * (default) /etc/pki/tls/certs/localhost.crt
 * `omicron_ssl_certificate_key`: (string/pathname)
-	* (default) /etc/pki/tls/private/localhost.key
+  * (default) /etc/pki/tls/private/localhost.key
 * `omicron_db_host`: (string/hostname)
-	* (default) localhost
+  * (default) localhost
 * `omicron_db_name`: (string)
-	* (default) omicron
-	* based on `omicron_username`
+  * (default) omicron
+  * based on `omicron_username`
 * `omicron_db_user`: (string)
-	* (default) omicron
-	* based on `omicron_username`
+  * (default) omicron
+  * based on `omicron_username`
 * `omicron_db_pass`: (string)
-	* (default) changeme
+  * (default) changeme
 * `omicron_allowed_hosts`: (array of strings)
-	* (default) [ 'localhost' ]
+  * (default) [ 'localhost' ]
 * `omicron_debug`: (boolean)
-	* (default) False
+  * (default) False
 * `omicron_secret_key`: (string)
-	* (default) changeme
+  * (default) changeme
 * `omicron_session_cookie_age`: (integer, in seconds)
-	* (default) 60 * 60 * 4
+  * (default) 60 * 60 * 4
 * `omicron_superuser_email`: (string/email)
-	* (default) user@example.com
+  * (default) user@example.com
 * `omicron_superuser_name`: (string)
-	* (default) omicron
-	* based on `omicron_application_name`
+  * (default) omicron
+  * based on `omicron_application_name`
 * `omicron_superuser_password`: (string)
-	* (default) changeme
+  * (default) changeme
+* `git_access_token`: (string)
+  * Mandatory. No default.
 
 ### Vars
 
 * `omicron_packages`: (array of strings)
-	* (default) Required packages suitable for EL7
+  * (default) Required packages suitable for EL7
 
 
 Dependencies
@@ -75,8 +83,13 @@ None.
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
+    - hosts: omicron-app
       roles:
-         - { role: username.rolename, x: 42 }
+        - name: uclalib_role_omicron
+          omicron_db_host: omicron-db
+          omicron_db_pass: 'secret'
+          omicron_allowed_hosts:
+            - 'localhost'
+            - 'omicron'
+            - 'omicron-app'
+          git_access_token: 'githubtoken'
