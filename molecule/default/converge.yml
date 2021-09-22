@@ -2,6 +2,6 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include uclalib_role_template"
+    - name: "Include uclalib_role_omicron"
       include_role:
-        name: "uclalib_role_template"
+        name: "uclalib_role_omicron"

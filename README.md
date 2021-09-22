@@ -1,4 +1,4 @@
-Role Name [![Build Status](https://travis-ci.org/UCLALibrary/uclalib_role_template.svg?branch=master)](https://travis-ci.org/UCLALibrary/uclalib_role_template)
+Role Name [![Build Status](https://travis-ci.org/UCLALibrary/uclalib_role_omicron.svg?branch=master)](https://travis-ci.org/UCLALibrary/uclalib_role_omicron)
 =========
 
 Omicron Initial Installation / Configuration / Maintenance
