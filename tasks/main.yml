@@ -38,6 +38,7 @@
     version: '{{ omicron_version }}'
   become: true
   become_user: '{{ omicron_username }}'
+  notify: Restart Omicron
 
 - name: Create Python Virtualenv
   pip:
