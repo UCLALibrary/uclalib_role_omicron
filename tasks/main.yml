@@ -51,16 +51,14 @@
 
 - name: Install settings.py
   template:
-    dest: '{{ omicron_application_dir }}/{{ omicron_application_name }}/omicron/omicron/{{ item }}'
-    src: '{{ item }}.j2'
+    dest: '{{ omicron_application_dir }}/{{ omicron_application_name }}/omicron/omicron/settings.py'
+    src: 'omicron_settings.py.j2'
     owner: '{{ omicron_username }}'
     group: '{{ omicron_groupname }}'
     mode: '0400'
   become: true
   become_user: '{{ omicron_username }}'
   notify: Restart Omicron
-  loop:
-    - settings.py
 
 - name: Migrate database
   command:
