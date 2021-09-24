@@ -51,16 +51,14 @@
 
 - name: Install settings.py
   template:
-    dest: '{{ omicron_application_dir }}/{{ omicron_application_name }}/omicron/omicron/{{ item }}'
-    src: '{{ item }}.j2'
+    dest: '{{ omicron_application_dir }}/{{ omicron_application_name }}/omicron/omicron/settings.py'
+    src: 'omicron_settings.py.j2'
     owner: '{{ omicron_username }}'
     group: '{{ omicron_groupname }}'
     mode: '0400'
   become: true
   become_user: '{{ omicron_username }}'
   notify: Restart Omicron
-  loop:
-    - settings.py
 
 - name: Migrate database
   command:
@@ -105,24 +103,9 @@
 
 - name: Configure nginx for Omicron
   template:
-    dest: '/etc/nginx/{{ item.dest }}'
-    src: '{{ item.src }}'
+    dest: '/etc/nginx/nginx.conf'
+    src: 'nginx_nginx.conf.j2'
     mode: '0444'
-  become: true
-  notify: Reload Nginx
-  loop:
-    - { src: 'nginx_socket.conf.j2',
-        dest: 'conf.d/{{ omicron_application_name }}_socket.conf' }
-    - { src: 'nginx_ssl.conf.j2',
-        dest: 'conf.d/{{ omicron_application_name }}_ssl.conf' }
-    - { src: 'nginx_application.conf.j2',
-        dest: 'default.d/{{ omicron_application_name }}.conf' }
-
-- name: Remove IPv6 listen directive
-  lineinfile:
-    path: '/etc/nginx/nginx.conf'
-    regexp: '^\s*listen\s+\[::\].*$'
-    state: absent
   become: true
   notify: Reload Nginx
 
